@@ -1,1 +1,233 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FacturaPro</title><style>*{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:#172744;font:14px Arial}.app{max-width:1050px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-weight:bold;font-size:20px}.brand b{background:#3264f5;color:white;padding:11px;border-radius:9px;margin-right:8px}.btn{border:0;border-radius:8px;padding:10px 13px;font-weight:bold;cursor:pointer}.blue{background:#3264f5;color:white}.white{background:white;border:1px solid #dbe3ee}.layout{display:grid;grid-template-columns:1fr 380px;gap:20px}.card{background:white;border:1px solid #e1e7f0;border-radius:14px;padding:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}h2{font-size:16px;margin:0 0 15px}label{display:block;font-size:12px;font-weight:bold;margin-bottom:5px}input,textarea,select{width:100%;border:1px solid #d7dfeb;border-radius:8px;padding:10px;font:inherit}textarea{min-height:60px}.wide{grid-column:1/-1}hr{border:0;border-top:1px solid #e5eaf2;margin:20px 0}.item{display:grid;grid-template-columns:1fr 58px 95px 85px 25px;gap:8px;margin-bottom:8px}.item input{padding:8px}.amount{text-align:right;padding-top:9px;font-weight:bold}.delete{border:0;background:none;color:#c24b5c;font-size:20px}.add{background:#edf2ff;color:#3264f5}.bottom{display:grid;grid-template-columns:1fr 210px;gap:14px;margin-top:15px;align-items:end}.totals{background:#f6f8fc;padding:13px;border-radius:10px}.line{display:flex;justify-content:space-between;color:#64748b;margin:7px 0}.line input{width:85px;border:0;background:transparent;text-align:right;font-weight:bold;padding:0}.final{border-top:1px solid #dbe3ee;padding-top:9px;color:#172744;font-size:16px;font-weight:bold}.preview{position:sticky;top:14px}.head{display:flex;align-items:center;gap:11px;border-bottom:1px solid #e4e9f1;padding-bottom:17px}.logo{width:85px;height:85px;display:grid;place-items:center;background:#f2f5fa;border-radius:10px;overflow:hidden;font-size:10px;text-align:center;color:#60718e;cursor:pointer}.logo img{width:100%;height:100%;object-fit:contain}.company{flex:1;font-size:17px;font-weight:bold}.company small,.meta span{display:block;color:#718099;font-size:11px;font-weight:normal;margin-top:4px}.meta{text-align:right}.client{margin:19px 0}.client h3{margin:5px 0}.client p{margin:0;white-space:pre-line;color:#718099}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#f3f6fa;padding:8px;text-align:left;color:#718099}td{padding:9px;border-bottom:1px solid #edf1f5}th:last-child,td:last-child{text-align:right}.sum{width:215px;margin:18px 0 18px auto}.sum div,.sum strong{display:flex;justify-content:space-between;margin:7px 0}.sum strong{border-top:2px solid #172744;padding-top:9px;font-size:16px}.notes{border-top:1px solid #e4e9f1;padding-top:12px;color:#718099;font-size:11px}@media(max-width:700px){body{padding-bottom:70px}.app{padding:0}.top{position:sticky;top:0;background:white;padding:12px 14px;margin:0;z-index:2}.layout{grid-template-columns:1fr}.card{border-radius:0;border-left:0;border-right:0}.preview{position:static;order:-1}.grid,.bottom{grid-template-columns:1fr}.item{grid-template-columns:1fr 1fr 25px;padding:9px;background:#f7f9fc;border-radius:10px}.item input:first-child{grid-column:1/-1}.amount{display:none}.delete{grid-column:3;grid-row:2}.top .actions{position:fixed;bottom:0;left:0;width:100%;background:white;padding:9px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}.btn{padding:12px 4px;font-size:12px}.sum{width:100%}}@media print{.top,.form{display:none}.app{padding:0}.layout{display:block}.card{border:0}.preview{position:static}}</style></head><body><main class="app"><header class="top"><div class="brand"><b>F</b>FacturaPro</div><div class="actions"><button class="btn white" onclick="newInvoice()">Nueva</button><button class="btn white" onclick="save()">Guardar</button><button class="btn blue" onclick="print()">PDF</button></div></header><section class="layout"><article class="card form"><h2>Nueva factura</h2><div class="grid"><div><label>Número</label><input id="num" type="number" value="1"></div><div><label>Fecha</label><input id="date" type="date"></div><div><label>Fecha límite</label><input id="due" type="date"></div><div><label>Estado</label><select id="status"><option>Pendiente de pago</option><option>Pagada</option><option>Vencida</option></select></div></div><hr><h2>Cliente</h2><div class="grid"><div><label>Nombre o empresa</label><input id="client"></div><div><label>Correo</label><input id="email"></div><div class="wide"><label>NIT, dirección o teléfono</label><textarea id="contact"></textarea></div></div><hr><h2>Productos y servicios</h2><div id="items"></div><button class="btn add" onclick="add()">+ Añadir producto</button><div class="bottom"><div><label>Notas</label><textarea id="notes">Gracias por su compra. Pago por transferencia bancaria.</textarea></div><div class="totals"><div class="line"><span>Subtotal</span><b id="sub">$0</b></div><div class="line"><span>Descuento</span><span><input id="disc" type="number" value="0"> COP</span></div><div class="line final"><span>Total</span><b id="total">$0</b></div><div class="line"><span>Abono</span><span><input id="deposit" type="number" value="0"> COP</span></div><div class="line final"><span>Saldo</span><b id="balance">$0</b></div></div></div></article><aside class="card preview"><div class="head"><label class="logo"><input id="logoFile" type="file" accept="image/*" hidden><span id="logoText">PONER<br>LOGO</span><img id="logoImg" hidden></label><div class="company">TU EMPRESA<small>NIT: 900.000.000-1<br>contacto@tuempresa.com</small></div><div class="meta"><b>FACTURA</b><span id="pnum"></span><span id="pdate"></span></div></div><div class="client"><small>FACTURAR A</small><h3 id="pclient">Nombre del cliente</h3><p id="pcontact">Información del cliente</p></div><table><thead><tr><th>Concepto</th><th>Cant.</th><th>Total</th></tr></thead><tbody id="pitems"></tbody></table><div class="sum"><div><span>Subtotal</span><span id="psub"></span></div><div><span>Descuento</span><span id="pdisc"></span></div><strong><span>TOTAL</span><span id="ptotal"></span></strong><div><span>Abono recibido</span><span id="pdeposit"></span></div><strong><span>SALDO</span><span id="pbalance"></span></strong></div><div class="notes"><b>NOTAS</b><p id="pnotes"></p><p id="pdue"></p></div></aside></section></main><script>const $=x=>document.getElementById(x),box=$('items');let rows=[];const money=x=>new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(x||0),today=()=>new Date().toISOString().slice(0,10);$('date').value=today();let q=new Date();q.setDate(q.getDate()+30);$('due').value=q.toISOString().slice(0,10);function add(n='',q=1,p=0){let r={n,q,p};rows.push(r);let e=document.createElement('div');e.className='item';e.innerHTML=`<input placeholder="Producto o servicio" value="${n}"><input type="number" value="${q}"><input type="number" value="${p}"><span class="amount"></span><button class="delete">×</button>`;box.append(e);let i=e.querySelectorAll('input');i[0].oninput=()=>{r.n=i[0].value;draw()};i[1].oninput=()=>{r.q=+i[1].value;draw()};i[2].oninput=()=>{r.p=+i[2].value;draw()};e.querySelector('button').onclick=()=>{rows=rows.filter(x=>x!==r);e.remove();draw()};draw()}function draw(){let s=rows.reduce((a,r)=>a+r.q*r.p,0),d=Math.min(+$('disc').value||0,s),total=s-d,dep=Math.min(+$('deposit').value||0,total),bal=total-dep;document.querySelectorAll('.item').forEach((e,i)=>e.querySelector('.amount').textContent=money(rows[i].q*rows[i].p));$('sub').textContent=money(s);$('total').textContent=money(total);$('balance').textContent=money(bal);$('pnum').textContent='N.º '+$('num').value;$('pdate').textContent=$('date').value;$('pclient').textContent=$('client').value||'Nombre del cliente';$('pcontact').textContent=[$('email').value,$('contact').value].filter(Boolean).join('\n')||'Información del cliente';$('pitems').innerHTML=rows.map(r=>`<tr><td>${r.n||'Sin descripción'}</td><td>${r.q}</td><td>${money(r.q*r.p)}</td></tr>`).join('');$('psub').textContent=money(s);$('pdisc').textContent='− '+money(d);$('ptotal').textContent=money(total);$('pdeposit').textContent='− '+money(dep);$('pbalance').textContent=money(bal);$('pnotes').textContent=$('notes').value;$('pdue').textContent='Pago máximo: '+$('due').value+' · '+$('status').value}function newInvoice(){$('num').value=+$('num').value+1;$('date').value=today();$('client').value=$('email').value=$('contact').value='';$('disc').value=$('deposit').value=0;rows=[];box.innerHTML='';add('',1,0);draw()}function save(){localStorage.setItem('factura_'+$('num').value,JSON.stringify({rows}));alert('Factura guardada.')}['num','date','due','status','client','email','contact','notes','disc','deposit'].forEach(x=>$(x).oninput=draw);$('logoFile').onchange=e=>{let r=new FileReader();r.onload=()=>{localStorage.setItem('logoEmpresa',r.result);$('logoImg').src=r.result;$('logoImg').hidden=false;$('logoText').hidden=true};if(e.target.files[0])r.readAsDataURL(e.target.files[0])};let logo=localStorage.getItem('logoEmpresa');if(logo){$('logoImg').src=logo;$('logoImg').hidden=false;$('logoText').hidden=true}add('Servicio profesional',1,850000);add('Soporte mensual',1,120000);draw();</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FacturaPro</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;font:14px Arial;color:#172744}
+.app{max-width:1000px;margin:auto;padding:20px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.brand{font-size:20px;font-weight:bold}.brand b{background:#3264f5;color:#fff;padding:10px;border-radius:9px;margin-right:7px}
+button{border:0;border-radius:8px;padding:10px 13px;font-weight:bold;cursor:pointer}.blue{background:#3264f5;color:#fff}.white{background:#fff;border:1px solid #dce3ee}
+.layout{display:grid;grid-template-columns:1fr 370px;gap:18px}.card{background:#fff;border:1px solid #e1e7f0;border-radius:14px;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;font-size:12px;font-weight:bold;margin-bottom:5px}
+input,textarea,select{width:100%;border:1px solid #d7dfeb;border-radius:8px;padding:10px;font:inherit}textarea{min-height:58px}.wide{grid-column:1/-1}
+hr{border:0;border-top:1px solid #e5eaf2;margin:20px 0}.item{display:grid;grid-template-columns:1fr 55px 95px 80px 25px;gap:7px;margin-bottom:8px}
+.item input{padding:8px}.amount{text-align:right;padding-top:9px;font-weight:bold}.delete{background:none;color:#c24b5c;font-size:20px;padding:0}
+.add{background:#edf2ff;color:#3264f5}.bottom{display:grid;grid-template-columns:1fr 205px;gap:13px;margin-top:15px;align-items:end}
+.totals{background:#f6f8fc;padding:13px;border-radius:10px}.line{display:flex;justify-content:space-between;color:#64748b;margin:7px 0}
+.line input{width:82px;border:0;background:none;text-align:right;padding:0;font-weight:bold}.final{border-top:1px solid #dbe3ee;padding-top:9px;font-weight:bold;color:#172744}
+.head{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e5eaf2;padding-bottom:16px}.logo{width:85px;height:85px;background:#f2f5fa;border-radius:9px;display:grid;place-items:center;overflow:hidden;text-align:center;font-size:10px;color:#60718e;cursor:pointer}.logo img{width:100%;height:100%;object-fit:contain}
+.company{font-size:17px;font-weight:bold;flex:1}.company small,.meta span{display:block;font-size:11px;font-weight:normal;color:#718099;margin-top:4px}.meta{text-align:right}
+.client{margin:19px 0}.client h3{margin:5px 0}.client p{margin:0;white-space:pre-line;color:#718099}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#f3f6fa;text-align:left;color:#718099;padding:8px}td{padding:9px;border-bottom:1px solid #edf1f5}th:last-child,td:last-child{text-align:right}
+.sum{width:210px;margin:18px 0 18px auto}.sum div,.sum strong{display:flex;justify-content:space-between;margin:7px 0}.sum strong{border-top:2px solid #172744;padding-top:9px;font-size:16px}
+@media(max-width:700px){body{padding-bottom:70px}.app{padding:0}.top{padding:12px;background:#fff;position:sticky;top:0;z-index:2}.layout{grid-template-columns:1fr}.card{border-radius:0;border-left:0;border-right:0}.grid,.bottom{grid-template-columns:1fr}.item{grid-template-columns:1fr 1fr 25px;padding:9px;background:#f7f9fc;border-radius:9px}.item input:first-child{grid-column:1/-1}.amount{display:none}.delete{grid-column:3;grid-row:2}.top .actions{position:fixed;bottom:0;left:0;width:100%;padding:9px;background:#fff;display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}.top button{padding:11px 4px;font-size:12px}.sum{width:100%}}
+@media print{.top,.form{display:none}.app{padding:0}.layout{display:block}.card{border:0}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top">
+  <div class="brand"><b>F</b>FacturaPro</div>
+  <div class="actions">
+    <button class="white" onclick="nueva()">Nueva</button>
+    <button class="white" onclick="guardar()">Guardar</button>
+    <button class="blue" onclick="print()">PDF</button>
+  </div>
+</header>
+
+<section class="layout">
+<article class="card form">
+  <h2>Nueva factura</h2>
+  <div class="grid">
+    <div><label>Número</label><input id="numero" type="number" value="1"></div>
+    <div><label>Fecha</label><input id="fecha" type="date"></div>
+    <div><label>Fecha límite</label><input id="vence" type="date"></div>
+    <div><label>Estado</label><select id="estado"><option>Pendiente de pago</option><option>Pagada</option><option>Vencida</option></select></div>
+  </div>
+  <hr>
+  <h2>Cliente</h2>
+  <div class="grid">
+    <div><label>Nombre o empresa</label><input id="cliente"></div>
+    <div><label>Correo</label><input id="correo"></div>
+    <div class="wide"><label>NIT, dirección o teléfono</label><textarea id="contacto"></textarea></div>
+  </div>
+  <hr>
+  <h2>Productos y servicios</h2>
+  <div id="items"></div>
+  <button class="add" onclick="agregar()">+ Añadir producto</button>
+
+  <div class="bottom">
+    <div><label>Notas</label><textarea id="notas">Gracias por su compra. Pago por transferencia bancaria.</textarea></div>
+    <div class="totals">
+      <div class="line"><span>Subtotal</span><b id="subtotal">$0</b></div>
+      <div class="line"><span>Descuento</span><span><input id="descuento" type="number" value="0"> COP</span></div>
+      <div class="line final"><span>Total</span><b id="total">$0</b></div>
+      <div class="line"><span>Abono</span><span><input id="abono" type="number" value="0"> COP</span></div>
+      <div class="line final"><span>Saldo</span><b id="saldo">$0</b></div>
+    </div>
+  </div>
+</article>
+
+<aside class="card">
+  <div class="head">
+    <label class="logo">
+      <input id="archivoLogo" type="file" accept="image/*" hidden>
+      <span id="textoLogo">PONER<br>LOGO</span>
+      <img id="imagenLogo" hidden>
+    </label>
+    <div class="company">TU EMPRESA<small>NIT: 900.000.000-1<br>contacto@tuempresa.com</small></div>
+    <div class="meta"><b>FACTURA</b><span id="vNumero"></span><span id="vFecha"></span></div>
+  </div>
+
+  <div class="client"><small>FACTURAR A</small><h3 id="vCliente">Nombre del cliente</h3><p id="vContacto">Información del cliente</p></div>
+
+  <table>
+    <thead><tr><th>Concepto</th><th>Cant.</th><th>Total</th></tr></thead>
+    <tbody id="vItems"></tbody>
+  </table>
+
+  <div class="sum">
+    <div><span>Subtotal</span><span id="vSubtotal"></span></div>
+    <div><span>Descuento</span><span id="vDescuento"></span></div>
+    <strong><span>TOTAL</span><span id="vTotal"></span></strong>
+    <div><span>Abono recibido</span><span id="vAbono"></span></div>
+    <strong><span>SALDO</span><span id="vSaldo"></span></strong>
+  </div>
+
+  <small id="vNotas"></small>
+</aside>
+</section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let productos = [];
+
+const dinero = valor => new Intl.NumberFormat('es-CO',{
+  style:'currency',currency:'COP',maximumFractionDigits:0
+}).format(valor || 0);
+
+$('fecha').value = new Date().toISOString().slice(0,10);
+let limite = new Date();
+limite.setDate(limite.getDate()+30);
+$('vence').value = limite.toISOString().slice(0,10);
+
+function agregar(nombre='', cantidad=1, precio=0){
+  const producto = {nombre,cantidad,precio};
+  productos.push(producto);
+
+  const fila = document.createElement('div');
+  fila.className = 'item';
+  fila.innerHTML = `
+    <input placeholder="Producto o servicio" value="${nombre}">
+    <input type="number" value="${cantidad}">
+    <input type="number" value="${precio}">
+    <span class="amount"></span>
+    <button class="delete">×</button>
+  `;
+
+  $('items').appendChild(fila);
+  const inputs = fila.querySelectorAll('input');
+
+  inputs[0].oninput = () => { producto.nombre = inputs[0].value; actualizar(); };
+  inputs[1].oninput = () => { producto.cantidad = Number(inputs[1].value); actualizar(); };
+  inputs[2].oninput = () => { producto.precio = Number(inputs[2].value); actualizar(); };
+
+  fila.querySelector('.delete').onclick = () => {
+    productos = productos.filter(p => p !== producto);
+    fila.remove();
+    actualizar();
+  };
+
+  actualizar();
+}
+
+function actualizar(){
+  const subtotal = productos.reduce((s,p) => s + p.cantidad * p.precio, 0);
+  const descuento = Math.min(Number($('descuento').value) || 0, subtotal);
+  const total = subtotal - descuento;
+  const abono = Math.min(Number($('abono').value) || 0, total);
+  const saldo = total - abono;
+
+  document.querySelectorAll('.item').forEach((fila,i) => {
+    fila.querySelector('.amount').textContent =
+      dinero(productos[i].cantidad * productos[i].precio);
+  });
+
+  $('subtotal').textContent = dinero(subtotal);
+  $('total').textContent = dinero(total);
+  $('saldo').textContent = dinero(saldo);
+
+  $('vNumero').textContent = 'N.º ' + $('numero').value;
+  $('vFecha').textContent = $('fecha').value;
+  $('vCliente').textContent = $('cliente').value || 'Nombre del cliente';
+  $('vContacto').textContent =
+    [$('correo').value,$('contacto').value].filter(Boolean).join('\n') ||
+    'Información del cliente';
+
+  $('vItems').innerHTML = productos.map(p => `
+    <tr><td>${p.nombre || 'Sin descripción'}</td><td>${p.cantidad}</td><td>${dinero(p.cantidad*p.precio)}</td></tr>
+  `).join('');
+
+  $('vSubtotal').textContent = dinero(subtotal);
+  $('vDescuento').textContent = '- ' + dinero(descuento);
+  $('vTotal').textContent = dinero(total);
+  $('vAbono').textContent = '- ' + dinero(abono);
+  $('vSaldo').textContent = dinero(saldo);
+  $('vNotas').textContent = $('notas').value;
+}
+
+function nueva(){
+  $('numero').value = Number($('numero').value) + 1;
+  $('fecha').value = new Date().toISOString().slice(0,10);
+  $('cliente').value = '';
+  $('correo').value = '';
+  $('contacto').value = '';
+  $('descuento').value = 0;
+  $('abono').value = 0;
+  productos = [];
+  $('items').innerHTML = '';
+  agregar('',1,0);
+  actualizar();
+}
+
+function guardar(){
+  localStorage.setItem('factura_' + $('numero').value, JSON.stringify({
+    numero:$('numero').value,
+    cliente:$('cliente').value,
+    productos
+  }));
+  alert('Factura guardada.');
+}
+
+['numero','fecha','vence','estado','cliente','correo','contacto','notas','descuento','abono']
+  .forEach(id => $(id).addEventListener('input', actualizar));
+
+$('archivoLogo').onchange = e => {
+  const archivo = e.target.files[0];
+  if(!archivo) return;
+
+  const lector = new FileReader();
+  lector.onload = () => {
+    localStorage.setItem('logoEmpresa', lector.result);
+    $('imagenLogo').src = lector.result;
+    $('imagenLogo').hidden = false;
+    $('textoLogo').hidden = true;
+  };
+  lector.readAsDataURL(archivo);
+};
+
+const logo = localStorage.getItem('logoEmpresa');
+if(logo){
+  $('imagenLogo').src = logo;
+  $('imagenLogo').hidden = false;
+  $('textoLogo').hidden = true;
+}
+
+agregar('Servicio profesional',1,850000);
+agregar('Soporte mensual',1,120000);
+actualizar();
+</script>
+</body>
+</html>
