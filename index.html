@@ -164,8 +164,8 @@ function actualizar(){
   $('vFecha').textContent = $('fecha').value;
   $('vCliente').textContent = $('cliente').value || 'Nombre del cliente';
   $('vContacto').textContent =
-    [$('correo').value,$('contacto').value].filter(Boolean).join('\n') ||
-    'Información del cliente';
+  $('contacto').value || 'Información del cliente';
+   
 
   $('vItems').innerHTML = productos.map(p => `
     <tr><td>${p.nombre || 'Sin descripción'}</td><td>${p.cantidad}</td><td>${dinero(p.cantidad*p.precio)}</td></tr>
@@ -183,7 +183,7 @@ function nueva(){
   $('numero').value = Number($('numero').value) + 1;
   $('fecha').value = new Date().toISOString().slice(0,10);
   $('cliente').value = '';
-  $('correo').value = '';
+
   $('contacto').value = '';
   $('descuento').value = 0;
   $('abono').value = 0;
@@ -202,7 +202,7 @@ function guardar(){
   alert('Factura guardada.');
 }
 
-['numero','fecha','vence','estado','cliente','correo','contacto','notas','descuento','abono']
+['numero','fecha','vence','estado','cliente','contacto','notas','descuento','abono']
   .forEach(id => $(id).addEventListener('input', actualizar));
 
 $('archivoLogo').onchange = e => {
